@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Harbor Inn – Hotel Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f6f8;--panel:#fff;--ink:#14232e;--mute:#5d6f7c;--line:#dbe3e8;--side:#12303f;--acc:#0e8a7d;--warn:#c47a12;--bad:#b83a3a;--ok:#1f8a4c;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e171d;--panel:#16232c;--ink:#e6eef2;--mute:#8fa3b0;--line:#27394544;--side:#0a1218;--acc:#2bb5a5;--warn:#e0a040;--bad:#e06a6a;--ok:#4cc27f}}
+:root[data-theme="dark"]{--bg:#0e171d;--panel:#16232c;--ink:#e6eef2;--mute:#8fa3b0;--line:#273945;--side:#0a1218;--acc:#2bb5a5;--warn:#e0a040;--bad:#e06a6a;--ok:#4cc27f}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,sans-serif;display:flex;min-height:100vh}
+aside{width:210px;background:var(--side);color:#dfeaf0;padding:20px 12px;flex-shrink:0}
+aside h1{font-size:18px;margin:0 8px 24px}
+aside button{display:block;width:100%;text-align:left;background:none;border:0;color:inherit;padding:10px 12px;border-radius:6px;font:inherit;cursor:pointer;margin-bottom:2px}
+aside button:hover{background:#ffffff14}
+aside button.on{background:var(--acc);color:#fff}
+main{flex:1;padding:24px;min-width:0}
+h2{margin:0 0 16px;font-size:22px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px}
+.stat b{display:block;font-size:26px}
+.stat span{color:var(--mute);font-size:13px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;margin-bottom:16px}
+.rooms{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.room{border:1px solid var(--line);border-left:5px solid var(--ok);border-radius:6px;padding:10px;background:var(--panel)}
+.room.occ{border-left-color:var(--bad)}.room.clean{border-left-color:var(--warn)}
+.room b{font-size:18px}.room small{display:block;color:var(--mute)}
+.room select{margin-top:6px;width:100%}
+form{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;align-items:end}
+label{font-size:13px;color:var(--mute);display:flex;flex-direction:column;gap:4px}
+input,select{font:inherit;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+button.btn{font:inherit;background:var(--acc);color:#fff;border:0;border-radius:6px;padding:9px 14px;cursor:pointer;font-weight:600}
+button.btn.alt{background:none;color:var(--bad);border:1px solid var(--bad);padding:5px 10px}
+button.btn.sm{padding:5px 10px}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--mute);font-weight:600}
+.tag{padding:2px 8px;border-radius:99px;font-size:12px;background:var(--line);}
+.tag.in{background:#1f8a4c22;color:var(--ok)}.tag.out{background:#5d6f7c22;color:var(--mute)}
+.empty{color:var(--mute);padding:12px 0}
+dialog{border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);max-width:380px;width:92%}
+dialog::backdrop{background:#0008}
+.row{display:flex;justify-content:space-between;padding:4px 0}
+.row.t{border-top:1px solid var(--line);margin-top:6px;padding-top:8px;font-weight:700}
+@media(max-width:700px){body{flex-direction:column}aside{width:100%;display:flex;gap:4px;padding:10px;overflow-x:auto}aside h1{display:none}aside button{width:auto;white-space:nowrap;margin:0}main{padding:16px}}
+aside{background:linear-gradient(180deg,#14355a 0%,#0e6f78 65%,#0e8a7d 100%)}
+aside h1{color:#ffd166;font-size:20px}
+aside button.on{background:#ffffff26;box-shadow:inset 3px 0 0 #ffd166}
+h2{color:var(--acc)}
+.stat{border:0;color:#fff;box-shadow:0 2px 8px #0002}
+.stat span{color:#ffffffdd}
+.stat:nth-child(1){background:linear-gradient(135deg,#3b6fd8,#6a9bf5)}
+.stat:nth-child(2){background:linear-gradient(135deg,#1f9d6a,#3dc890)}
+.stat:nth-child(3){background:linear-gradient(135deg,#e0583a,#f58f5e)}
+.stat:nth-child(4){background:linear-gradient(135deg,#7a4fd1,#a784f2)}
+.box{border-top:3px solid var(--acc)}
+.box:nth-of-type(even){border-top-color:#e0a030}
+.room{background:#1f8a4c1f}
+.room.occ{background:#b83a3a22}
+.room.clean{background:#e0a03027}
+.room b{color:var(--ink)}
+th{background:#0e8a7d1c;color:var(--ink)}
+tr:hover td{background:#0e8a7d10}
+.tag.out{background:#7a4fd126;color:#8a62e0}
+.btn{background:linear-gradient(135deg,#0e8a7d,#2bb5a5)}
+button.btn.alt{background:none}
+button.btn:hover{filter:brightness(1.1)}
+dialog{border-top:4px solid #ffd166}
+.row.t{color:var(--acc)}
+</style>
+</head>
+<body>
+<aside>
+  <h1>Harbor Inn</h1>
+  <button data-v="dash" class="on">Dashboard</button>
+  <button data-v="rooms">Rooms</button>
+  <button data-v="book">Bookings</button>
+  <button data-v="guests">Guest history</button>
+</aside>
+<main id="app"></main>
+
+<dialog id="bill"><div id="billBody"></div><p style="text-align:right;margin:14px 0 0"><button class="btn" onclick="document.getElementById('bill').close()">Close</button></p></dialog>
+
+<script>
+const KEY='harborInnHMS';
+const types={Single:1500,Double:2500,Deluxe:4000,Suite:7000};
+let db;
+try{db=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!db){db={rooms:[],bookings:[],id:1};
+  [['101','Single'],['102','Single'],['103','Double'],['201','Double'],['202','Deluxe'],['301','Suite']].forEach(r=>db.rooms.push({no:r[0],type:r[1],rate:types[r[1]],status:'available'}));}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}};
+const $=s=>document.querySelector(s);
+const inr=n=>'₹'+Number(n).toLocaleString('en-IN');
+const today=()=>new Date().toISOString().slice(0,10);
+const nights=(a,b)=>Math.max(1,Math.round((new Date(b)-new Date(a))/864e5));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let view='dash';
+
+document.querySelectorAll('aside button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('aside button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');view=b.dataset.v;render();});
+
+function render(){
+  const f={dash,rooms,book,guests}[view];
+  $('#app').innerHTML=f();
+  save();
+}
+
+function dash(){
+  const occ=db.rooms.filter(r=>r.status==='occupied').length;
+  const free=db.rooms.filter(r=>r.status==='available').length;
+  const active=db.bookings.filter(b=>b.state==='in');
+  const rev=db.bookings.filter(b=>b.state==='out').reduce((s,b)=>s+b.total,0);
+  return `<h2>Dashboard</h2>
+  <div class="stats">
+    <div class="stat"><b>${db.rooms.length}</b><span>Total rooms</span></div>
+    <div class="stat"><b>${free}</b><span>Available</span></div>
+    <div class="stat"><b>${occ}</b><span>Occupied</span></div>
+    <div class="stat"><b>${inr(rev)}</b><span>Revenue from check-outs</span></div>
+  </div>
+  <div class="box"><h3 style="margin-top:0">Guests in house</h3>
+  ${active.length?`<div class="wrap"><table><tr><th>Guest</th><th>Room</th><th>Check-in</th><th>Due out</th></tr>
+  ${active.map(b=>`<tr><td>${esc(b.guest)}</td><td>${b.room}</td><td>${b.inDate}</td><td>${b.outDate}</td></tr>`).join('')}</table></div>`
+  :'<div class="empty">No guests checked in. Add a booking to get started.</div>'}</div>`;
+}
+
+function rooms(){
+  return `<h2>Rooms</h2>
+  <div class="box"><form onsubmit="addRoom(event)">
+    <label>Room number<input name="no" required></label>
+    <label>Type<select name="type">${Object.keys(types).map(t=>`<option>${t}</option>`).join('')}</select></label>
+    <label>Rate per night (₹)<input name="rate" type="number" min="0" placeholder="Default for type"></label>
+    <button class="btn">Add room</button></form></div>
+  <div class="rooms">${db.rooms.map(r=>`<div class="room ${r.status==='occupied'?'occ':r.status==='cleaning'?'clean':''}">
+    <b>${esc(r.no)}</b><small>${r.type} · ${inr(r.rate)}</small>
+    <small>${r.status}</small>
+    ${r.status==='occupied'?'':`<select onchange="setStatus('${r.no}',this.value)"><option value="available" ${r.status==='available'?'selected':''}>Available</option><option value="cleaning" ${r.status==='cleaning'?'selected':''}>Cleaning</option></select>
+    <button class="btn alt" style="margin-top:6px" onclick="delRoom('${r.no}')">Remove</button>`}</div>`).join('')}</div>`;
+}
+
+function book(){
+  const free=db.rooms.filter(r=>r.status==='available');
+  const act=db.bookings.filter(b=>b.state==='in');
+  return `<h2>Bookings</h2>
+  <div class="box"><form onsubmit="addBooking(event)">
+    <label>Guest name<input name="guest" required></label>
+    <label>Phone<input name="phone" type="tel" required></label>
+    <label>Room<select name="room" required>${free.length?free.map(r=>`<option value="${r.no}">${r.no} – ${r.type} (${inr(r.rate)})</option>`).join(''):'<option value="">No rooms available</option>'}</select></label>
+    <label>Check-in<input name="inDate" type="date" value="${today()}" required></label>
+    <label>Check-out<input name="outDate" type="date" required></label>
+    <button class="btn" ${free.length?'':'disabled'}>Check in guest</button></form></div>
+  <div class="box"><h3 style="margin-top:0">Checked in</h3>
+  ${act.length?`<div class="wrap"><table><tr><th>Guest</th><th>Phone</th><th>Room</th><th>Dates</th><th></th></tr>
+  ${act.map(b=>`<tr><td>${esc(b.guest)}</td><td>${esc(b.phone)}</td><td>${b.room}</td><td>${b.inDate} to ${b.outDate}</td>
+  <td><button class="btn sm" onclick="checkout(${b.id})">Check out and bill</button></td></tr>`).join('')}</table></div>`
+  :'<div class="empty">Nobody is checked in right now.</div>'}</div>`;
+}
+
+function guests(){
+  const all=[...db.bookings].reverse();
+  return `<h2>Guest history</h2><div class="box">${all.length?`<div class="wrap"><table>
+  <tr><th>Guest</th><th>Phone</th><th>Room</th><th>Stay</th><th>Status</th><th>Total</th><th></th></tr>
+  ${all.map(b=>`<tr><td>${esc(b.guest)}</td><td>${esc(b.phone)}</td><td>${b.room}</td><td>${b.inDate} to ${b.outDate}</td>
+  <td><span class="tag ${b.state}">${b.state==='in'?'Checked in':'Checked out'}</span></td>
+  <td>${b.state==='out'?inr(b.total):'–'}</td>
+  <td>${b.state==='out'?`<button class="btn sm" onclick="showBill(${b.id})">Bill</button>`:''}</td></tr>`).join('')}</table></div>`
+  :'<div class="empty">No stays recorded yet.</div>'}</div>`;
+}
+
+function addRoom(e){
+  e.preventDefault();const f=new FormData(e.target);const no=f.get('no').trim();
+  if(db.rooms.some(r=>r.no===no)){alert('Room '+no+' already exists. Use a different number.');return;}
+  const type=f.get('type');
+  db.rooms.push({no,type,rate:+f.get('rate')||types[type],status:'available'});render();
+}
+function setStatus(no,s){db.rooms.find(r=>r.no===no).status=s;render();}
+function delRoom(no){if(confirm('Remove room '+no+'?')){db.rooms=db.rooms.filter(r=>r.no!==no);render();}}
+function addBooking(e){
+  e.preventDefault();const f=Object.fromEntries(new FormData(e.target));
+  if(f.outDate<=f.inDate){alert('Check-out must be after check-in.');return;}
+  if(!f.room)return;
+  db.bookings.push({id:db.id++,guest:f.guest.trim(),phone:f.phone.trim(),room:f.room,inDate:f.inDate,outDate:f.outDate,state:'in'});
+  db.rooms.find(r=>r.no===f.room).status='occupied';render();
+}
+function checkout(id){
+  const b=db.bookings.find(x=>x.id===id);const r=db.rooms.find(x=>x.no===b.room);
+  b.outDate=b.outDate<today()?b.outDate:(today()>b.inDate?today():b.outDate);
+  b.nights=nights(b.inDate,b.outDate);b.rate=r.rate;
+  b.sub=b.nights*b.rate;b.tax=Math.round(b.sub*0.12);b.total=b.sub+b.tax;
+  b.state='out';r.status='cleaning';render();showBill(id);
+}
+function showBill(id){
+  const b=db.bookings.find(x=>x.id===id);
+  $('#billBody').innerHTML=`<h3 style="margin-top:0">Bill – ${esc(b.guest)}</h3>
+  <div class="row"><span>Room</span><span>${b.room}</span></div>
+  <div class="row"><span>Stay</span><span>${b.inDate} to ${b.outDate}</span></div>
+  <div class="row"><span>${b.nights} night(s) × ${inr(b.rate)}</span><span>${inr(b.sub)}</span></div>
+  <div class="row"><span>GST (12%)</span><span>${inr(b.tax)}</span></div>
+  <div class="row t"><span>Total</span><span>${inr(b.total)}</span></div>`;
+  $('#bill').showModal();
+}
+render();
+</script>
+</body>
+</html>
